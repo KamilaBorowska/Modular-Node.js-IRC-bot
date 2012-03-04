@@ -11,14 +11,26 @@ exports.loadedModules = [];
 
 exports.createModuleBucket = function(name) {
 	exports.modules[name] = {};
-	console.log(exports.modules);
 }
 
 exports.loadModule = function(modName) {
 	module = require("./modules/" + modName + ".js");
-	if (modules.case != undefined && modules.function != undefined && module.dependencies != undefined) {
-		
-		modules[module.case][modName] = module;
+	if (module.case != undefined && module.function != undefined && module.bucket != undefined) {
+		/* TODO: Handling of module dependencies */
+		exports.modules[module.bucket][module.case] = module;
+		return true;
+	} else return false;
+}
+
+exports.unloadModule = function(bucket, module) {
+	if (exports.modules[bucket][module] != undefined)
+		delete exports.modules[bucket][module];
+
+}
+
+exports.runModule = function(bucket, case, arguments) {
+	if (exports.modules[bucket][case] != undefined) {
+		exports.modules[bucket][case].func(argumentss);
 		return true;
 	} else return false;
 }

@@ -1,4 +1,4 @@
-console.log("loaded settings.");
+console.log("Loaded settings.");
 
 exports.settings = {
 	defaultNick: "NinaBot",

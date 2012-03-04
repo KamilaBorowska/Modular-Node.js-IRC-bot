@@ -6,8 +6,14 @@ settings = require('./settings.js');
 settings = settings.settings; //Is there a better way to do this?
 
 var moduleSystem = require("./modules.js");
+var func = require("./functions.js");
 
-moduleSystem.createModuleBucket("test");
+moduleSystem.createModuleBucket("internal");
+moduleSystem.loadModule("consoleLog");
+moduleSystem.createModuleBucket("ircProtocol");
+moduleSystem.createModuleBucket("ircProtocolOutgoing");
+
+func.outputMessage("This is a test!");
 
 connections = {};
 
@@ -24,6 +30,8 @@ ircServer = function(args) {
 		});
 	}
 }
+
+console.log("Starting bot.");
 
 test = new ircServer(settings.servers.digibase);
 test.connect();
