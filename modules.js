@@ -9,8 +9,12 @@
 exports.modules = {};
 exports.loadedModules = [];
 
-exports.createModuleBucket = function(name) {
-	exports.modules[name] = {};
+//autoLoading defines if the bot should try to autoload a module if it's missing.
+exports.createModuleBucket = function(name, autoLoading) {
+	exports.modules[name] = {
+		autoLoading: autoLoaidng,
+		modules: {}
+	};
 }
 
 exports.loadModule = function(modName) {

@@ -6,22 +6,19 @@ fs = require("fs");
 prepare = function() {
 	settings = require('./settings.js');
 	settings = settings.settings; //Is there a better way to do this?
-
-/*	moduleSystem = require("./modules.js");
-	moduleSystem.createModuleBucket("internal");
-	moduleSystem.loadModule("consoleLog");
-	moduleSystem.createModuleBucket("ircProtocol");
-	moduleSystem.createModuleBucket("ircProtocolOutgoing");
-*/
+	moduleSystem = require("./modules.js");
 	require("./functions.js");
 	connections = {};
 
 }
 
+connectionId = 0;
 ircServer = function(s1, s2) {
 	this.serverSettings = s2;
 	this.globalSettings = s1;
 	this.connected = false;
+	this.id = connectionId;
+	connectionId++;
 	
 	this.connect = function() {
 		if (this.serverSettings.port == undefined)
@@ -30,7 +27,9 @@ ircServer = function(s1, s2) {
 		console.log("Connecting...");
 		this.socket = net.createConnection(this.serverSettings.port, this.serverSettings.address);
 		this.socket.parent = this;
-		this.socket.on("connect", function(){this.parent.onSocketConnect()});
+		this.socket.on("connect", function() { this.parent.onSocketConnect() } );
+		moduleSystem.createModuleBucket("protocolIncoming" + this.id, true);
+		moduleSystem.createModuleBucket("protocolOutgoing" + this.id, true);
 	}
 		
     this.onLineRead = function(line) {
@@ -61,9 +60,9 @@ ircServer = function(s1, s2) {
 		var lazy = require("lazy");
 
 		var l = new lazy(this.socket);
-		var lol = this;
+		var thisServer = this;
 		
-		l.lines.forEach(function(line) {lol.onLineRead(line)});
+		l.lines.forEach(function(line) {thisServer.onLineRead(line)});
 		
 		var nick = this.globalSettings.defaultNick;
 		this.sendCommand("NICK", nick);
@@ -71,12 +70,12 @@ ircServer = function(s1, s2) {
     }
     
     this.onRegister = function() {
-    	this.sendCommand("JOIN", this.serverSettings.channels.join(","));
-		this.sendCommand("PRIVMSG #nsmbhacking", "Hi Nina! This is a test.");
+    	//this.sendCommand("JOIN", this.serverSettings.channels.join(","));
+		//Let's not do that just yet.
 	}
 	
     this.sendCommand = function(command, args) {
-    	console.log("<<< "+command+" "+args);
+		if (
     	this.socket.write(command+" "+args+"\r\n");
     }
 }
