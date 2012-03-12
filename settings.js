@@ -1,14 +1,19 @@
 console.log("Loaded settings.");
 
 exports.settings = {
-	defaultNick: "NinaBot",
+	defaultNick: "NinaBot2",
 	servers: {
-		digibase: {
+/*		digibase: {
 			address: "irc.digibase.ca",
 			port: 6667,
 			moduleOptions: {
 				channels: ["#abxd", "#nsmbhacking"]
 			}
+		}
+*/		localhost: {
+			address: "irc.digibase.ca",
+			port: 6667,
+			channels: ["#nsmbhacking"]
 		}
 	},
 	username: "nina",
