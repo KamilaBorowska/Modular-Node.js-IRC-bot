@@ -1,21 +1,26 @@
-var net = require('net');
-var os = require('os');
-var tty = require('tty');
+net = require('net');
+os = require('os');
+tty = require('tty');
+fs = require("fs");
 
-settings = require('./settings.js');
-settings = settings.settings; //Is there a better way to do this?
+prepare = function() {
+	settings = require('./settings.js');
+	settings = settings.settings; //Is there a better way to do this?
 
-var moduleSystem = require("./modules.js");
-var func = require("./functions.js");
+	moduleSystem = require("./modules.js");
+	moduleSystem.createModuleBucket("internal");
+	moduleSystem.loadModule("consoleLog");
+	moduleSystem.createModuleBucket("ircProtocol");
+	moduleSystem.createModuleBucket("ircProtocolOutgoing");
 
-moduleSystem.createModuleBucket("internal");
-moduleSystem.loadModule("consoleLog");
-moduleSystem.createModuleBucket("ircProtocol");
-moduleSystem.createModuleBucket("ircProtocolOutgoing");
-
-func.outputMessage("This is a test!");
-
-connections = {};
+	notDone = true;
+	while (notDone) {
+		if (moduleSystem != undefined) {
+			require("./functions.js");
+			connections = {};
+		}
+	}
+}
 
 ircServer = function(args) {
 	this.settings = args;
@@ -30,8 +35,7 @@ ircServer = function(args) {
 		});
 	}
 }
-
-console.log("Starting bot.");
+prepare();
 
 test = new ircServer(settings.servers.digibase);
 test.connect();

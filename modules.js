@@ -1,8 +1,8 @@
 /* ====================
    Modules system
    ====================
-   This system works by using module "buckets" to store the modules and using "cases" to invoke the functionality of the module.
-   For example, we could have a bucket called ircProtocol that defines what to do with different things in the IRC protocol, in which we could have a case called "PRIVMSG" registered by the PRIVMSG module.
+   This system works by using module "buckets" to store the modules and using "key" to invoke the functionality of the module.
+   For example, we could have a bucket called ircProtocol that defines what to do with different things in the IRC protocol, in which we could have a key called "PRIVMSG" registered by the PRIVMSG module.
    When some data is received and what has to be done with it is determined, it would run a function from the module assocated with said function.
 */
 
@@ -14,12 +14,19 @@ exports.createModuleBucket = function(name) {
 }
 
 exports.loadModule = function(modName) {
-	module = require("./modules/" + modName + ".js");
-	if (module.case != undefined && module.function != undefined && module.bucket != undefined) {
-		/* TODO: Handling of module dependencies */
-		exports.modules[module.bucket][module.case] = module;
-		return true;
-	} else return false;
+	fs.readFile(settings.moduleSystem.path + modName + ".js", function(err, data) {
+		if (err) {
+			func.outputMessage("The module at " + settings.moduleSystem.path + modName + ".js could not be loaded.");
+		}
+		else {
+			module = require("./modules/" + modName + ".js");
+			if (module.key != undefined && module.func != undefined && module.bucket != undefined) {
+				/* TODO: Handling of module dependencies */
+				exports.modules[module.bucket][module.key] = func.clone(module);
+				return true;
+			} else return false;
+		}
+	});
 }
 
 exports.unloadModule = function(bucket, module) {
@@ -28,9 +35,11 @@ exports.unloadModule = function(bucket, module) {
 
 }
 
-exports.runModule = function(bucket, case, arguments) {
-	if (exports.modules[bucket][case] != undefined) {
-		exports.modules[bucket][case].func(argumentss);
+exports.runModule = function(bucket, key, arguments) {
+	if (exports.modules[bucket][key] != undefined) {
+		exports.modules[bucket][key].func(argumentss);
 		return true;
-	} else return false;
+	} else {
+		console.log("Module execution failed.");
+	}
 }

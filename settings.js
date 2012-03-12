@@ -13,5 +13,9 @@ exports.settings = {
 	},
 	username: "nina",
 	realname: "Bot",
-	modDefault: []
+	moduleSystem: {
+		path: "./modules/", //This needs a / at the end.
+		defaultModules: ['consoleLog'],
+		blacklisted: []
+	}
 };
