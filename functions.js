@@ -1,8 +1,9 @@
 //Functions hub
 
 //Output a message to the console using the loaded outputMessage module, fall back to console.log() if there's none.
+moduleSystem.createModuleBucket("internal");
 exports.outputMessage = function(message) {
-	if (moduleSystem.modules.internal.outputMessage != undefined)
+	if (typeof moduleSystem.modules.internal.outputMessage != 'undefined')
 		moduleSystem.runModule("internal", "outputMessage", {message: message});
 	else console.log(message);
 }

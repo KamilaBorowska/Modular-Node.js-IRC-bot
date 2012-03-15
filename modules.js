@@ -1,32 +1,32 @@
-/* ====================
+/*
+   ====================
    Modules system
    ====================
-   This system works by using module "buckets" to store the modules and using "key" to invoke the functionality of the module.
-   For example, we could have a bucket called ircProtocol that defines what to do with different things in the IRC protocol, in which we could have a key called "PRIVMSG" registered by the PRIVMSG module.
-   When some data is received and what has to be done with it is determined, it would run a function from the module assocated with said function.
 */
 
 exports.modules = {};
-exports.loadedModules = [];
 
 //autoLoading defines if the bot should try to autoload a module if it's missing.
-exports.createModuleBucket = function(name, autoLoading) {
+exports.createModuleBucket = function(name, baseDir) {
 	exports.modules[name] = {
-		autoLoading: autoLoaidng,
+		baseDir: baseDir,
 		modules: {}
 	};
 }
 
-exports.loadModule = function(modName) {
-	fs.readFile(settings.moduleSystem.path + modName + ".js", function(err, data) {
+exports.loadModule = function(bucket, modName) {
+	baseDir = exports.modules[bucket].baseDir;
+	console.log(exports.modules[bucket]);
+	console.log("Bucket: " + bucket);
+	fs.readFile(settings.moduleSystem.path + baseDir + modName + ".js", function(err, data) {
 		if (err) {
-			func.outputMessage("The module at " + settings.moduleSystem.path + modName + ".js could not be loaded.");
+			return false;
 		}
 		else {
-			module = require("./modules/" + modName + ".js");
-			if (module.key != undefined && module.func != undefined && module.bucket != undefined) {
+			module = require(settings.moduleSystem.path + baseDir + modName + ".js");
+			if (module.key != undefined && module.func != undefined) {
 				/* TODO: Handling of module dependencies */
-				exports.modules[module.bucket][module.key] = func.clone(module);
+				exports.modules[bucket].modules[module.key] = func.clone(module);
 				return true;
 			} else return false;
 		}
@@ -34,16 +34,21 @@ exports.loadModule = function(modName) {
 }
 
 exports.unloadModule = function(bucket, module) {
-	if (exports.modules[bucket][module] != undefined)
-		delete exports.modules[bucket][module];
+	if (exports.modules[bucket].modules[module] != undefined)
+		delete exports.modules[bucket].modules[module];
 
 }
 
-exports.runModule = function(bucket, key, arguments) {
-	if (exports.modules[bucket][key] != undefined) {
-		exports.modules[bucket][key].func(argumentss);
-		return true;
+exports.runModule = function(bucket, key, arguments, autoLoad) {
+	if (exports.modules[bucket].modules[key] != undefined) {
+		return exports.modules[bucket][key].func(arguments);
+	} else if (autoLoad) {
+		if (exports.loadModule(exports.bucket, key)) {
+			return exports.modules[bucket].modules[key].func(arguments);
+			func.outputMessage("Loading module " + key + " for " + bucket + " because it did not exist.");
+		}
 	} else {
 		console.log("Module execution failed.");
+		return false;
 	}
 }
