@@ -1,26 +1,13 @@
-console.log("Loaded settings.");
-
-exports.settings = {
-	defaultNick: "NinaBot2",
+exports = {
+	globalNick: "NinaBotV2",
+	globalUserName: "bot",
+	globalRealName: "Nina's bot",
+	
 	servers: {
-/*		digibase: {
-			address: "irc.digibase.ca",
-			port: 6667,
-			moduleOptions: {
-				channels: ["#abxd", "#nsmbhacking"]
-			}
-		}
-*/		localhost: {
+		digibase: {
 			address: "irc.digibase.ca",
 			port: 6667,
 			channels: ["#nsmbhacking"]
 		}
-	},
-	username: "nina",
-	realname: "Bot",
-	moduleSystem: {
-		path: "./modules/", //This needs a / at the end.
-		defaultModules: ['consoleLog'],
-		blacklisted: []
 	}
-};
+}
