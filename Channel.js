@@ -25,7 +25,7 @@ exports.Channel = function(server, channelName)
 		
 		modules.forEach(function(module){
 			if(module['command_'+command])
-				module.['command_'+command](user, args);
+				module['command_'+command](user, args);
 		});
 		
 	}
