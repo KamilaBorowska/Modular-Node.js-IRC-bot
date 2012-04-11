@@ -2,12 +2,14 @@ tty = require("tty");
 os = require("os");
 net = require("net");
 
-exports.Server = function(address, port)
+exports.Server = function(server)
 {
-	this.address = address;
-	this.port = port;
+	this.address = server.address;
+	this.port = server.port;
 
-	this.nick = "NinaBot2";
+	this.nick = server.nick;
+	this.userName = server.userName;
+	this.realName = server.realName;
 	
 	this.channels = {};
 
@@ -45,7 +47,7 @@ exports.Server = function(address, port)
 			});
 
 			self.sendCommand("NICK", self.nick);
-			self.sendCommand("USER", self.nick+" "+self.nick+" "+self.address+" "+self.nick);
+			self.sendCommand("USER", self.userName+" "+self.userName+" "+self.address+" "+self.realName);
 			
 		});
 		this.connected = true; 
@@ -66,7 +68,7 @@ exports.Server = function(address, port)
 		{
 			case "PRIVMSG":
 				var channel = this.channels[message.args[0]];
-				if(channel)
+				if (channel)
 				{
 					var text = message.args[1].trim();
 					if(text.charAt(0) == '!')
@@ -91,10 +93,12 @@ exports.Server = function(address, port)
 				if(channel)
 					channel.onUserLeave(message.nick);
 				break;
-			case "376": //End of MOTD
+			//Changed this to 251; it's a safer assumption.
+			case "251":
 				for(var channel in this.channels)
 				{
 					this.sendCommand("JOIN", channel);
+					console.log(this.channels[channel].modules);
 					this.channels[channel].startModules();
 				}
 				break;
@@ -156,12 +160,6 @@ exports.Server = function(address, port)
 		message.rawCommand = match[1];
 		message.commandType = 'normal';
 		line = line.replace(/^[^ ]+ +/, '');
-
-/*
-		if ( replyFor[message.rawCommand] ) {
-		    message.command = replyFor[message.rawCommand].name;
-		    message.commandType = replyFor[message.rawCommand].type;
-		}*/
 
 		message.args = [];
 		var middle, trailing;

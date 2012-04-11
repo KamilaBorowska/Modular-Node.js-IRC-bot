@@ -1,7 +1,7 @@
 //TODO: Replace this with JSON
 
-exports = {
-	globalNick: "NinaBotV2",
+exports.settings = {
+	globalNick: "NinaBot_",
 	globalUserName: "bot",
 	globalRealName: "Nina's bot",
 	
@@ -9,7 +9,7 @@ exports = {
 		digibase: {
 			address: "irc.digibase.ca",
 			port: 6667,
-			channels: ["#nsmbhacking", "#ninabot"],
+			channels: ["#ninabot"],
 		}
 	}
 }

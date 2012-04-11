@@ -1,14 +1,31 @@
+testModule = function()
+{
+	this.a = "meep";
+	this.onMessage = function(user, message)
+	{
+		this.channel.say(user+" said: "+message);
+	}
+}
+
+testModule = function()	{
+	this.a = "meep";
+	this.onMessage = function(user, message)
+	{
+		this.channel.say(user+" said: "+message);
+	}
+}		
 
 exports.Channel = function(server, channelName)
 {
 	this.server = server;
 	this.channelName = channelName;
 
-	this.modules = []; //TODO Load modules
+	this.modules = [new testModule()]; //TODO Load modules
 
 	this.startModules = function()
 	{
 		var self = this;
+
 		this.modules.forEach(function(module){
 			module.channel = self;
 			if(module.onModuleStart)
@@ -18,11 +35,12 @@ exports.Channel = function(server, channelName)
 
 	this.onMessage = function(user, message)
 	{
-		console.log(this.modules);
-		this.modules.forEach(function(module){
-			if(module.onMessage)
+		for (i in this.modules) {
+			module = this.modules[i];
+			if (module.onMessage) {
 				module.onMessage(user, message);
-		});
+			}
+		}
 	}
 	
 	//Commands are something like :nb command arg1 arg2 arg3
