@@ -6,38 +6,59 @@ exports.Channel = function(server, channelName)
 
 	this.modules = []; //TODO Load modules
 
-	this.gotMessage = function(user, message)
+	this.startModules = function()
 	{
-		//We can run modules like this:
-		modules.forEach(function(module){
-			if(module.gotMessage)
-				module.gotMessage(user, message);
+		var self = this;
+		this.modules.forEach(function(module){
+			module.channel = self;
+			if(module.onModuleStart)
+				module.onModuleStart();
+		});		
+	}
+
+	this.onMessage = function(user, message)
+	{
+		console.log(this.modules);
+		this.modules.forEach(function(module){
+			if(module.onMessage)
+				module.onMessage(user, message);
 		});
 	}
 	
 	//Commands are something like :nb command arg1 arg2 arg3
 	//It's a good idea to handle them separately from messages.
-	this.gotCommand = function(user, command, args)
+	this.onCommand = function(user, command, args)
 	{
 		//We can make commands be their own functions in the nodes!
 		//Note: I haven't tested what's below but it should work
 		//Maybe we want to change the way they're named: command_help is UGLY.
 		
-		modules.forEach(function(module){
-			if(module['command_'+command])
-				module['command_'+command](user, args);
+		this.modules.forEach(function(module){
+			if(module['onCommand_'+command])
+				module['onCommand_'+command](user, args);
 		});
 		
 	}
 	
-	this.userJoined = function(user)
+	this.onUserJoin = function(user)
 	{
-		//TODO
+		this.modules.forEach(function(module){
+			if(module.onUserJoin)
+				module.onUserJoin(user, message);
+		});
 	}
 	
-	this.userLeft = function(user)
+	this.onUserLeave = function(user)
 	{
-		//TODO
+		this.modules.forEach(function(module){
+			if(module.onUserLeave)
+				module.onUserLeave(user, message);
+		});
+	}
+	
+	this.say = function(text)
+	{
+		server.sendCommand("PRIVMSG", channelName+" :"+text);
 	}
 	
 	//TODO: Maybe more functions.
