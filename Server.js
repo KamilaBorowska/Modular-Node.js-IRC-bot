@@ -2,14 +2,14 @@ tty = require("tty");
 os = require("os");
 net = require("net");
 
-exports.Server = function(server)
+exports.Server = function(serverSettings)
 {
-	this.address = server.address;
-	this.port = server.port;
+	this.address = serverSettings.address;
+	this.port = serverSettings.port;
 
-	this.nick = server.nick;
-	this.userName = server.userName;
-	this.realName = server.realName;
+	this.nick = serverSettings.nick;
+	this.userName = serverSettings.userName;
+	this.realName = serverSettings.realName;
 	
 	this.channels = {};
 

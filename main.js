@@ -9,21 +9,32 @@ if (settings.servers == undefined) {
 
 servers = [];
 for (i in settings.servers) {
-	var server = settings.servers[i];
-	if (!server.address) throw new Error("You forgot the server address for a server.");
-	if (!server.port)
-		server.port = 6667;
-	if (!server.nick)
-		server.nick = settings.globalNick;
-	if (!server.userName)
-		server.userName = settings.globalUserName;
-	if (!server.realName)
-		server.realName = settings.globalRealName;
+	var serverSettings = settings.servers[i];
+	if (!serverSettings.address) throw new Error("You forgot the server address for a server.");
+	if (!serverSettings.port)
+		serverSettings.port = 6667;
+	if (!serverSettings.nick)
+		serverSettings.nick = settings.globalNick;
+	if (!serverSettings.userName)
+		serverSettings.userName = settings.globalUserName;
+	if (!serverSettings.realName)
+		serverSettings.realName = settings.globalRealName;
 	
-	servers[i] = new Server(server);
-	if (typeof server.channels != 'undefined') {
-		for (j in server.channels)
-			servers[i].addChannel(new Channel(servers[i], server.channels[j]));
+	servers[i] = new Server(serverSettings);
+	if (typeof serverSettings.channels != 'undefined') {
+		for (channelName in serverSettings.channels)
+		{
+			var channel = new Channel(servers[i], channelName);
+			for(k in serverSettings.channels[channelName])
+			{
+				var modulename = serverSettings.channels[channelName][k];
+				var module = require("./modules/"+modulename+".js").module;
+				console.log(modulename);
+				console.log(module);
+				channel.modules.push(new module());
+			}
+			servers[i].addChannel(channel);
+		}
 	}
 	
 	servers[i].connect();

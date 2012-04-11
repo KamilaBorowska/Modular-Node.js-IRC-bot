@@ -20,8 +20,8 @@ exports.Channel = function(server, channelName)
 	this.server = server;
 	this.channelName = channelName;
 
-	this.modules = [new testModule()]; //TODO Load modules
-
+	this.modules = [];
+	
 	this.startModules = function()
 	{
 		var self = this;
