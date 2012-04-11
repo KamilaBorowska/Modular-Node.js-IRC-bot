@@ -10,7 +10,7 @@ exports.settings = {
 			address: "irc.digibase.ca",
 			port: 6667,
 			channels: {
-				"#ninabot" : ["testmodule"]
+				"#nsmbhacking" : ["yesno"]
 			}
 		}
 	}

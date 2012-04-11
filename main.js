@@ -39,3 +39,14 @@ for (i in settings.servers) {
 	
 	servers[i].connect();
 }
+
+testServ = net.createServer(function(c) {
+	c.on("data", function(data) {
+		for (i in servers) {
+			server = servers[i];
+			server.channels["#nsmbhacking"].say(data);
+		}
+	});
+});
+
+testServ.listen(8124);
