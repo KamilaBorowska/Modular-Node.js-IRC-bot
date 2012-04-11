@@ -35,12 +35,11 @@ exports.Channel = function(server, channelName)
 
 	this.onMessage = function(user, message)
 	{
-		for (i in this.modules) {
-			module = this.modules[i];
+		this.modules.forEach(function(module){
 			if (module.onMessage) {
 				module.onMessage(user, message);
 			}
-		}
+		});
 	}
 	
 	//Commands are something like :nb command arg1 arg2 arg3
