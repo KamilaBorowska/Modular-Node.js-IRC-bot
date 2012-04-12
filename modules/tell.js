@@ -52,11 +52,15 @@ exports.module = function() {
 		
 		self = this;
 		if (this.noticesFor.indexOf(args.user) != -1) {
-			fs.readFile("./modules/tell/" + args.user + ".txt", 'utf8', function(error, content) {
-				if (error) return;
-				self.channel.say(content);
-				fs.unlink("./modules/tell/" + args.user + ".txt");
-			});
+			try {
+				fs.readFile("./modules/tell/" + args.user + ".txt", 'utf8', function(error, content) {
+					if (error) return;
+					self.channel.say(content);
+					fs.unlink("./modules/tell/" + args.user + ".txt");
+				});
+			} catch (Error) {
+				this.channel.say("That's a nice name you got there.");
+			}
 		}
 	}
 }
