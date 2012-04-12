@@ -1,15 +1,15 @@
 //TODO: Replace this with JSON
 
 exports.settings = {
-	globalNick: "NinaBotV2",
+	globalNick: "NinaBot",
 	globalUserName: "bot",
-	globalRealName: "NinaBot",
+	globalRealName: "Nina's bot",
 
 	defaultCommandPrefix: ":nb ",
 
 	//These modules will be loaded in all channels.
 	globalServModules: ["ctcp"],
-	globalModules: ['modulemanager'],
+	globalModules: ['tell'],
 	
 	servers: {
 		digibase: {
@@ -17,7 +17,7 @@ exports.settings = {
 			port: 6667,
 			modules: [],
 			channels: {
-				"#ninabot" : ["yesno", "chance"]
+				"#nsmbhacking" : ['chance']
 			}
 		}
 	}

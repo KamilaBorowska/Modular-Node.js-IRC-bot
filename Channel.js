@@ -65,7 +65,9 @@ exports.Channel = function(server, channelName)
 	
 	this.say = function(text)
 	{
-		server.sendCommand("PRIVMSG", channelName+" :"+text);
+		text = text.split("\n").trim();
+		for (i in text)
+			server.sendCommand("PRIVMSG", channelName+" :"+text[i]);
 	}
 	
 	//TODO: Maybe more functions.

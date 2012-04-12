@@ -70,7 +70,7 @@ exports.Server = function(serverSettings)
 			});
 
 			self.sendCommand("NICK", self.nick);
-			self.sendCommand("USER", self.userName+" "+self.userName+" "+self.address+" "+self.realName);
+			self.sendCommand("USER", self.userName+" "+self.userName+" "+self.address+" :"+self.realName);
 			
 		});
 		this.connected = true; 
