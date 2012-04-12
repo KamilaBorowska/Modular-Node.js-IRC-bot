@@ -17,6 +17,10 @@ exports.module = function() {
 
 	this.onCommand_tell = function(args) {
 		args2 = args.text.split(" ");
+		if (args2[0].trim().length < 1) {
+			this.channel.say("You're doing it wrong.");
+			return;
+		}
 		args2[0] = args2[0].replace("/", "");
 		args2[0] = args2[0].replace("_", "");
 		args2[0] = args2[0].replace(".", "");
