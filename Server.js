@@ -14,7 +14,29 @@ exports.Server = function(serverSettings)
 	this.channels = {};
 
 	this.connected = false;
-	
+
+	this.modules = [];
+	this.startModules = function()
+	{
+		var self = this;
+
+		this.modules.forEach(function(module){
+			module.server = self;
+			if(module.onModuleStart)
+				module.onModuleStart();
+		});		
+	}
+
+	this.runModules = function(func, arguments) {
+		for (i in this.modules) {
+			module = this.modules[i];
+			if (module[func]) {
+				module[func](arguments);
+			}
+		}
+	}
+
+
 	// Connects to the server and starts listening for incoming data.
 	this.connect = function()
 	{
@@ -81,6 +103,8 @@ exports.Server = function(serverSettings)
 					}
 					else
 						channel.onMessage(message.nick, text);
+				} else {
+					this.runModules('onMessage', message);
 				}
 				break;
 			case "JOIN":

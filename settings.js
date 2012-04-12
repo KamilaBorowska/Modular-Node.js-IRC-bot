@@ -1,14 +1,19 @@
 //TODO: Replace this with JSON
 
 exports.settings = {
-	globalNick: "NinaBot2",
+	globalNick: "NinaBotV2",
 	globalUserName: "bot",
-	globalRealName: "Nina's bot",
+	globalRealName: "NinaBot",
+
+	//These modules will be loaded in all channels.
+	globalServModules: ["ctcp"],
+	globalModules: [],
 	
 	servers: {
 		digibase: {
 			address: "irc.digibase.ca",
 			port: 6667,
+			modules: [],
 			channels: {
 				"#nsmbhacking" : ["yesno"]
 			}
