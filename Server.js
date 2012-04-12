@@ -10,6 +10,7 @@ exports.Server = function(serverSettings)
 	this.nick = serverSettings.nick;
 	this.userName = serverSettings.userName;
 	this.realName = serverSettings.realName;
+	this.commandPrefix = serverSettings.commandPrefix;
 	
 	this.channels = {};
 
@@ -93,15 +94,13 @@ exports.Server = function(serverSettings)
 				if (channel)
 				{
 					var text = message.args[1].trim();
-					if(text.charAt(0) == '!')
-					{
-						// Parse command
-						var match = text.match(/^!([^ ]+) */);
-						var command = match[1];
-						text = text.substr(1+command.length+1).trim();
-						channel.onCommand(message.nick, command, text);
-					}
-					else
+					if (text.indexOf(this.commandPrefix) == 0) {
+						cmdString = text.substring(this.commandPrefix.length);
+						command = cmdString.split(" ")[0];
+						arguments = cmdString.substring(command.length + 1);
+						channel.onCommand(message.nick, command, arguments);
+
+					} else
 						channel.onMessage(message.nick, text);
 				} else {
 					this.runModules('onMessage', message);
@@ -128,6 +127,8 @@ exports.Server = function(serverSettings)
 				break;
 			case "PING":
 				this.sendCommand("PONG", message.args[0]);
+			case true:
+				this.runModules(message.command, message);
 			break;
 		}
 	}

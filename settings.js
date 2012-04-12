@@ -5,6 +5,8 @@ exports.settings = {
 	globalUserName: "bot",
 	globalRealName: "NinaBot",
 
+	defaultCommandPrefix: ":nb ",
+
 	//These modules will be loaded in all channels.
 	globalServModules: ["ctcp"],
 	globalModules: [],
@@ -15,7 +17,7 @@ exports.settings = {
 			port: 6667,
 			modules: [],
 			channels: {
-				"#nsmbhacking" : ["yesno"]
+				"#nsmbhacking" : ["yesno", "chance"]
 			}
 		}
 	}

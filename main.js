@@ -19,6 +19,8 @@ for (i in settings.servers) {
 		serverSettings.userName = settings.globalUserName;
 	if (!serverSettings.realName)
 		serverSettings.realName = settings.globalRealName;
+	if (!serverSettings.commandPrefix)
+		serverSettings.commandPrefix = settings.defaultCommandPrefix;
 
 	if (settings.globalServModules)
 		serverSettings.modules = serverSettings.modules.concat(settings.globalServModules);

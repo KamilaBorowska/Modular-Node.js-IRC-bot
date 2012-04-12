@@ -1,20 +1,3 @@
-testModule = function()
-{
-	this.a = "meep";
-	this.onMessage = function(user, message)
-	{
-		this.channel.say(user+" said: "+message);
-	}
-}
-
-testModule = function()	{
-	this.a = "meep";
-	this.onMessage = function(user, message)
-	{
-		this.channel.say(user+" said: "+message);
-	}
-}		
-
 exports.Channel = function(server, channelName)
 {
 	this.server = server;
