@@ -1,6 +1,7 @@
 var Server = require("./Server.js").Server;
 var Channel = require("./Channel.js").Channel;
 var settings = require("./settings.js").settings;
+exports.moduleSystem = require("./moduleSystem.js");
 
 if (settings.servers == undefined) {
 	console.log("You haven't added any servers in the settings.");
@@ -44,9 +45,9 @@ for (i in settings.servers) {
 				serverSettings.channels[channelName] = serverSettings.channels[channelName].concat(settings.globalModules);
 			for(k in serverSettings.channels[channelName])
 			{
-				var modulename = serverSettings.channels[channelName][k];
-				var module = require("./modules/"+modulename+".js").module;
-				channel.modules.push(new module());
+				var moduleName = serverSettings.channels[channelName][k];
+				var module = require("./modules/"+moduleName+".js").module;
+				channel.modules[moduleName] = new module();
 			}
 			servers[i].addChannel(channel);
 		}

@@ -9,7 +9,7 @@ exports.settings = {
 
 	//These modules will be loaded in all channels.
 	globalServModules: ["ctcp"],
-	globalModules: [],
+	globalModules: ['modulemanager'],
 	
 	servers: {
 		digibase: {
@@ -17,7 +17,7 @@ exports.settings = {
 			port: 6667,
 			modules: [],
 			channels: {
-				"#nsmbhacking" : ["yesno", "chance"]
+				"#ninabot" : ["yesno", "chance"]
 			}
 		}
 	}
