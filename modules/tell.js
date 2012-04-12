@@ -21,6 +21,7 @@ exports.module = function() {
 		args2[0] = args2[0].replace("/", "");
 		args2[0] = args2[0].replace("_", "");
 		args2[0] = args2[0].replace(".", "");
+		args2[0] = args2[0].replace("\\", "");
 		args2[0] = args2[0].toLowerCase();
 		if (args2[0] == args.user.toLowerCase()) {
 			this.channel.say("You can't leave notices for yourself.");
@@ -48,6 +49,7 @@ exports.module = function() {
 		args.user = args.user.replace("/", "");
 		args.user = args.user.replace("_", "");
 		args.user = args.user.replace(".", "");
+		args.user = args.user.replace("\\", "");
 		args.user = args.user.toLowerCase();
 		
 		self = this;
