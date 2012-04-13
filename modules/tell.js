@@ -30,8 +30,9 @@ exports.module = function() {
 
 		tellMessage = "";
 		for (i = 1; i < args2.length; i++) {
-			tellMessage += args2[i];
+			tellMessage += args2[i] + " ";
 		}
+		tellMessage = tellMessage.trim();
 
 		if (args.user.trim().length < 1 || tellMessage.trim().length < 1) {
 			this.channel.say("You're doing it wrong.");
