@@ -9,11 +9,11 @@ exports.settings = {
 
 	//These modules will be loaded in all channels.
 	globalServModules: ["ctcp"],
-	globalModules: ['tell'],
+	globalModules: ['tell', 'yesno'],
 	
 	servers: {
 		digibase: {
-			address: "localhost",
+			address: "irc.digibase.ca",
 			port: 6667,
 			modules: [],
 			channels: {
