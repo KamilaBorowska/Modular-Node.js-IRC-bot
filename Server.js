@@ -122,6 +122,11 @@ exports.Server = function(serverSettings)
 			case true:
 				this.runModules(message.command, message);
 				break;
+			case "433":
+				this.nick += "_";
+				this.sendCommand("NICK", this.nick);
+				this.sendCommand("USER", this.userName+" "+this.userName+" "+this.address+" :"+this.realName);
+				break;
 		}
 	}
 	
