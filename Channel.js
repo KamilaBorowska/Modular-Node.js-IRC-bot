@@ -5,7 +5,7 @@ exports.Channel = function(server, channelName)
 	this.server = server;
 	this.channelName = channelName;
 
-	this.modules = new mc.ModuleContainer(server, this);
+	this.modules = new mc.ModuleContainer(server, this, this.moduleSettings);
 	
 
 	this.onMessage = function(user, message)
@@ -31,6 +31,8 @@ exports.Channel = function(server, channelName)
 	
 	this.say = function(text)
 	{
+		if (typeof text != 'string')
+			text = text.toString();
 		text = text.trim();
 		text = text.split("\n");
 		for (i in text)

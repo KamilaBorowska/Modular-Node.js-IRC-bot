@@ -13,6 +13,12 @@ exports.ModuleContainer = function(server, channel)
 			this.loadModule(moduleName);
 		}
 	}
+
+	this.loadSettings = function(settings) {
+		for (i in this.modules) {
+			this.modules[i].settings = settings;
+		}
+	}
 	
 	this.loadModule = function(moduleName)
 	{
@@ -43,5 +49,4 @@ exports.ModuleContainer = function(server, channel)
 			}
 		}
 	}
-
 }

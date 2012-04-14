@@ -30,11 +30,11 @@ for (i in settings.servers) {
 	server.modules.load(serverSettings.modules);
 
 	if (typeof serverSettings.channels != 'undefined') {
-		for (channelName in serverSettings.channels)
-		{
+		for (channelName in serverSettings.channels) {
 			var channel = new Channel(server, channelName);
 			channel.modules.load(settings.globalModules);
-			channel.modules.load(serverSettings.channels[channelName]);
+			channel.modules.load(serverSettings.channels[channelName].modules);
+			channel.modules.loadSettings(serverSettings.channels[channelName].moduleSettings);
 			server.addChannel(channel);
 		}
 	}
