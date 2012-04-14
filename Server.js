@@ -17,17 +17,6 @@ exports.Server = function(serverSettings)
 	this.connected = false;
 
 	this.modules = new mc.ModuleContainer(this);
-	this.startModules = function()
-	{
-		var self = this;
-
-		this.modules.forEach(function(module){
-			module.server = self;
-			if(module.onModuleStart)
-				module.onModuleStart();
-		});		
-	}
-
 
 	// Connects to the server and starts listening for incoming data.
 	this.connect = function()
@@ -62,7 +51,6 @@ exports.Server = function(serverSettings)
 
 			self.sendCommand("NICK", self.nick);
 			self.sendCommand("USER", self.userName+" "+self.userName+" "+self.address+" :"+self.realName);
-			
 		});
 		this.connected = true; 
 	}
@@ -74,27 +62,22 @@ exports.Server = function(serverSettings)
 
 	this.gotRawMessage = function(message)
 	{
-//		console.log(message);
-		//TODO
-		//Join channels and add them to this.channels
-		//Process messages, pass them to channels.
 		switch(message.command)
 		{
 			case "PRIVMSG":
 				var channel = this.channels[message.args[0]];
+				var text = message.args[1].trim();
 				if (channel)
 				{
-					var text = message.args[1].trim();
 					if (text.indexOf(this.commandPrefix) == 0) {
 						cmdString = text.substring(this.commandPrefix.length);
 						command = cmdString.split(" ")[0];
 						arguments = cmdString.substring(command.length + 1);
 						channel.onCommand(message.nick, command, arguments);
-
 					} else
 						channel.onMessage(message.nick, text);
 				} else {
-					this.runModules('onMessage', message);
+					this.modules.run('onMessage', message.nick, text);
 				}
 				break;
 			case "JOIN":
@@ -109,18 +92,18 @@ exports.Server = function(serverSettings)
 				break;
 			//Changed this to 251; it's a safer assumption.
 			case "251":
+				this.modules.start();
 				for(var channel in this.channels)
 				{
 					this.sendCommand("JOIN", channel);
-					console.log(this.channels[channel].modules);
-					this.channels[channel].startModules();
+					this.channels[channel].modules.start();
 				}
 				break;
 			case "PING":
 				this.sendCommand("PONG", message.args[0]);
 				break;
 			case true:
-				this.runModules(message.command, message);
+				modules.run(message.command, message);
 				break;
 			case "433":
 				this.nick += "_";
@@ -145,6 +128,11 @@ exports.Server = function(serverSettings)
     
 	//TODO: Functions to say stuff, send PMs, maybe more.
 	//But we should only add what we need. No bloat :)
+	
+	this.notice = function(nick, message)
+	{
+		this.sendCommand("NOTICE", nick+" :"+message);
+	}
 
 	/*
 	* parseMessage(line, stripColors)

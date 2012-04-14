@@ -13,7 +13,7 @@ exports.settings = {
 	
 	servers: {
 		digibase: {
-			address: "irc.digibase.ca",
+			address: "localhost",
 			port: 6667,
 			modules: [],
 			channels: {

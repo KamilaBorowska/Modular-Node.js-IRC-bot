@@ -26,32 +26,19 @@ for (i in settings.servers) {
 	if (settings.globalServModules)
 		serverSettings.modules = serverSettings.modules.concat(settings.globalServModules);
 
-	servers[i] = new Server(serverSettings);
-
-	for(l in serverSettings.modules)
-	{
-		var moduleName = serverSettings.modules[l];
-		var module = require("./modules/"+moduleName+".js").module;
-		servers[i].modules.push(new module());
-	}
-
-	servers[i].startModules();
+	var server = new Server(serverSettings);
+	server.modules.load(serverSettings.modules);
 
 	if (typeof serverSettings.channels != 'undefined') {
 		for (channelName in serverSettings.channels)
 		{
-			var channel = new Channel(servers[i], channelName);
-			if (settings.globalModules)
-				serverSettings.channels[channelName] = serverSettings.channels[channelName].concat(settings.globalModules);
-			for(k in serverSettings.channels[channelName])
-			{
-				var moduleName = serverSettings.channels[channelName][k];
-				var module = require("./modules/"+moduleName+".js").module;
-				channel.modules[moduleName] = new module();
-			}
-			servers[i].addChannel(channel);
+			var channel = new Channel(server, channelName);
+			channel.modules.load(settings.globalModules);
+			channel.modules.load(serverSettings.channels[channelName]);
+			server.addChannel(channel);
 		}
 	}
 	
-	servers[i].connect();
+	server.connect();
+	servers.push(server);
 }

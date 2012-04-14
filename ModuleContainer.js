@@ -1,4 +1,4 @@
-exports.ModuleContainer = function(server, channel=undefined)
+exports.ModuleContainer = function(server, channel)
 {
 	this.modules = [];
 	
@@ -10,7 +10,7 @@ exports.ModuleContainer = function(server, channel=undefined)
 		for(l in moduleSettings)
 		{
 			var moduleName = moduleSettings[l];
-			loadModule(moduleName);
+			this.loadModule(moduleName);
 		}
 	}
 	
@@ -21,12 +21,12 @@ exports.ModuleContainer = function(server, channel=undefined)
 		moduleInstance.server = this.server;
 		moduleInstance.channel = this.channel;
 		moduleInstance.container = this;
-		servers[i].modules.push(moduleInstance);
+		this.modules.push(moduleInstance);
 	}
 	
 	this.start = function()
 	{
-		run("onModuleStart");
+		this.run("onModuleStart");
 	}
 	
 	this.run = function(func)
@@ -39,7 +39,7 @@ exports.ModuleContainer = function(server, channel=undefined)
 		for (i in this.modules) {
 			module = this.modules[i];
 			if (module[func]) {
-				module[func].apply(module, arguments);
+				module[func].apply(module, args);
 			}
 		}
 	}
