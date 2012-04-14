@@ -1,4 +1,4 @@
-exports.killRequireCache = function() {
+var killRequireCache = function() {
 	for (i in require.cache)
 		delete require.cache[i];
 }
@@ -21,12 +21,12 @@ exports.module = function() {
 		}
 	}
 	this.onCommand_modload = function(args) {
-		exports.killRequireCache();
+		killRequireCache();
 		this.channel.say("Loading module: " + args);
 		module.parent.exports.moduleSystem.loadModule(this.channel, args.text);
 	}
 	this.onCommand_modunload = function(args) {
-		exports.killRequireCache();
+		killRequireCache();
 		this.channel.say("Unloading module: " + args);
 		module.parent.exports.moduleSystem.unloadModule(this.channel, args.text);
 	}

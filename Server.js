@@ -1,7 +1,7 @@
 tty = require("tty");
 os = require("os");
 net = require("net");
-
+mc = require("./ModuleContainer.js");
 exports.Server = function(serverSettings)
 {
 	this.address = serverSettings.address;
@@ -16,7 +16,7 @@ exports.Server = function(serverSettings)
 
 	this.connected = false;
 
-	this.modules = [];
+	this.modules = new mc.ModuleContainer(this);
 	this.startModules = function()
 	{
 		var self = this;
@@ -26,15 +26,6 @@ exports.Server = function(serverSettings)
 			if(module.onModuleStart)
 				module.onModuleStart();
 		});		
-	}
-
-	this.runModules = function(func, arguments) {
-		for (i in this.modules) {
-			module = this.modules[i];
-			if (module[func]) {
-				module[func](arguments);
-			}
-		}
 	}
 
 
@@ -127,9 +118,10 @@ exports.Server = function(serverSettings)
 				break;
 			case "PING":
 				this.sendCommand("PONG", message.args[0]);
+				break;
 			case true:
 				this.runModules(message.command, message);
-			break;
+				break;
 		}
 	}
 	
