@@ -4,8 +4,14 @@ exports.module = function() {
 	this.onModuleStart = function(settings) {
 		self = this;
 		this.server = net.createServer(function(co) {
+			re = "";
 			co.on("data", function(data) {
-				self.channel.say(data);
+				re += data;
+			});
+
+			co.on('end', function() {
+				self.channel.say(re);
+				delete re;
 			});
 		});
 
