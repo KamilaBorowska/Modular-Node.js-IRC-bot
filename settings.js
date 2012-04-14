@@ -8,24 +8,28 @@ exports.settings = {
 	defaultCommandPrefix: ":nb ",
 
 	//These modules will be loaded in all channels.
-	globalServModules: ["ctcp"],
-	globalModules: ['yesno', 'chance'],
+	globalServModules: {
+		ctcp: {}
+	},
+	
+	globalModules: {
+		yesno: {},
+		chance: {},
+		tell: {}
+	},
 	
 	servers: {
 		digibase: {
 			address: "irc.digibase.ca",
 			port: 6667,
-			modules: [],
+			modules: {},
 			channels: {
 				"#nsmbhacking": {
-					modules: ['report'],
-					moduleSettings: {
-						report: {
-							useFile: "./modules/report/nsmbhd.sock"
-						}
-					}
+					report: {port: 8755}
+				},
+				"#abxd": {
+					report: {port: 8756}
 				}
-
 			}
 		}
 	}

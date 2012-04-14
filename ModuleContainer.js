@@ -7,26 +7,21 @@ exports.ModuleContainer = function(server, channel)
 	
 	this.load = function(moduleSettings)
 	{
-		for(l in moduleSettings)
+		for(moduleName in moduleSettings)
 		{
-			var moduleName = moduleSettings[l];
-			this.loadModule(moduleName);
+			console.log(moduleName);
+			this.loadModule(moduleName, moduleSettings[moduleName]);
 		}
 	}
 
-	this.loadSettings = function(settings) {
-		for (i in this.modules) {
-			this.modules[i].settings = settings;
-		}
-	}
-	
-	this.loadModule = function(moduleName)
+	this.loadModule = function(moduleName, settings)
 	{
 		var module = require("./modules/"+moduleName+".js").module;
 		var moduleInstance = new module();
 		moduleInstance.server = this.server;
 		moduleInstance.channel = this.channel;
 		moduleInstance.container = this;
+		moduleInstance.settings = settings;
 		this.modules.push(moduleInstance);
 	}
 	
