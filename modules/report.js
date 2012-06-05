@@ -2,7 +2,7 @@ net = require('net');
 
 exports.module = function() {
 	this.onModuleStart = function(settings) {
-		self = this;
+		var self = this;
 		this.server = net.createServer(function(co) {
 			re = "";
 			co.on("data", function(data) {
@@ -15,7 +15,7 @@ exports.module = function() {
 			});
 		});
 
-		this.server.listen(8755, "127.0.0.1");
+		this.server.listen(this.settings.port, "127.0.0.1");
 	}
 
 	this.onModuleDestroy = function() {

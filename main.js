@@ -23,18 +23,16 @@ for (i in settings.servers) {
 	if (!serverSettings.commandPrefix)
 		serverSettings.commandPrefix = settings.defaultCommandPrefix;
 
-	if (settings.globalServModules)
-		serverSettings.modules = serverSettings.modules.concat(settings.globalServModules);
-
 	var server = new Server(serverSettings);
+	server.modules.load(settings.globalServModules);
 	server.modules.load(serverSettings.modules);
 
 	if (typeof serverSettings.channels != 'undefined') {
 		for (channelName in serverSettings.channels) {
 			var channel = new Channel(server, channelName);
 			channel.modules.load(settings.globalModules);
-			channel.modules.load(serverSettings.channels[channelName].modules);
-			channel.modules.loadSettings(serverSettings.channels[channelName].moduleSettings);
+			channel.modules.load(serverSettings.channels[channelName]);
+
 			server.addChannel(channel);
 		}
 	}
