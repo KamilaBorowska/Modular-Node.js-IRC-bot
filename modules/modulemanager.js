@@ -3,31 +3,33 @@ var killRequireCache = function() {
 		delete require.cache[i];
 }
 
-
 exports.module = function() {
-	this.onCommand_modreload = function(args) {
-		exports.killRequireCache();
+	this.onCommand_modreload = function(nick, args, message) {
+		if (this.server.getUserAuthenticated(message) == false)
+			return false;
+		killRequireCache();
 		nick = args['nick'];
-		args = args['text'];
 		for (i in servers) {
 			server = servers[i];
 			for (j in server.channels) {
 				channel = server.channels[j];
 				if (channel.modules[args]) {
 					this.channel.say("Reloading module: " + args);
-					module.parent.exports.moduleSystem.reloadModule(channel, args);
+					module.channel.modules.load(args);
 				} else this.channel.say("Module not found: " + args);
 			}
 		}
 	}
-	this.onCommand_modload = function(args) {
+	this.onCommand_modload = function(nick, args, message) {
+		if (this.server.getUserAuthenticated(message) == false) return false;
 		killRequireCache();
 		this.channel.say("Loading module: " + args);
-		module.parent.exports.moduleSystem.loadModule(this.channel, args.text);
+		module.parent.exports.moduleSystem.loadModule(this.channel, args);
 	}
-	this.onCommand_modunload = function(args) {
+	this.onCommand_modunload = function(nick, message, args) {
+		if (this.server.getUserAuthenticated(message) == false) return false;
 		killRequireCache();
 		this.channel.say("Unloading module: " + args);
-		module.parent.exports.moduleSystem.unloadModule(this.channel, args.text);
+		module.parent.exports.moduleSystem.unloadModule(this.channel, args);
 	}
 }

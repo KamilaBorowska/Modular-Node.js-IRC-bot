@@ -9,7 +9,7 @@ exports.ModuleContainer = function(server, channel)
 	{
 		for(l in moduleSettings)
 		{
-			var moduleName = moduleSettings[l];
+		var moduleName = moduleSettings[l];
 			this.loadModule(moduleName);
 		}
 	}

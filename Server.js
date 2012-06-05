@@ -2,8 +2,9 @@ tty = require("tty");
 os = require("os");
 net = require("net");
 mc = require("./ModuleContainer.js");
-exports.Server = function(serverSettings)
-{
+
+exports.Server = function(serverSettings) {
+	this.serverSettings = serverSettings;
 	this.address = serverSettings.address;
 	this.port = serverSettings.port;
 
@@ -11,12 +12,21 @@ exports.Server = function(serverSettings)
 	this.userName = serverSettings.userName;
 	this.realName = serverSettings.realName;
 	this.commandPrefix = serverSettings.commandPrefix;
-	
+
 	this.channels = {};
 
 	this.connected = false;
 
 	this.modules = new mc.ModuleContainer(this);
+
+	this.authenticatedUsers = [];
+
+	this.getUserAuthenticated = function(message) {
+		if (this.authenticatedUsers.indexOf(message.prefix) != -1)
+			return true;
+		else
+			return false;
+	}
 
 	// Connects to the server and starts listening for incoming data.
 	this.connect = function()
@@ -73,10 +83,23 @@ exports.Server = function(serverSettings)
 						cmdString = text.substring(this.commandPrefix.length);
 						command = cmdString.split(" ")[0];
 						arguments = cmdString.substring(command.length + 1);
-						channel.onCommand(message.nick, command, arguments);
+						channel.onCommand(message, command, arguments);
 					} else
-						channel.onMessage(message.nick, text);
+						channel.onMessage(message.nick, text, message);
 				} else {
+					sText = text.split(" ");
+					if (sText[0] == "Authenticate") {
+						for (i = 1; i < sText.length; i++)
+							sjText = sText[i];
+						if (sjText == this.serverSettings.authPassword) {
+							this.authenticatedUsers.push(message.prefix);
+							this.sendCommand("NOTICE", message.nick + " :Successfully authenticated.");
+						}
+						else {
+							this.sendCommand("NOTICE", message.nick + " :Authentication failed.");
+						}
+					}
+
 					this.modules.run('onMessage', message.nick, text);
 				}
 				break;
@@ -142,13 +165,9 @@ exports.Server = function(serverSettings)
 	* 
 	* From: https://github.com/martynsmith/node-irc/blob/master/lib/irc.js
 	*/
-	function parseMessage(line, stripColors) { // {{{
+	function parseMessage(line) { // {{{
 		var message = {};
 		var match;
-
-		if (stripColors) {
-		    line = line.replace(/[\x02\x1f\x16\x0f]|\x03\d{0,2}(?:,\d{0,2})?/g, "");
-		}
 
 		// Parse prefix
 		if ( match = line.match(/^:([^ ]+) +/) ) {

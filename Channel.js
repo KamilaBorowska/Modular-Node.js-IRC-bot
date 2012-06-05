@@ -6,17 +6,15 @@ exports.Channel = function(server, channelName)
 	this.channelName = channelName;
 
 	this.modules = new mc.ModuleContainer(server, this, this.moduleSettings);
-	
 
 	this.onMessage = function(user, message)
 	{
 		this.modules.run('onMessage', user, message);
 	}
 	
-	this.onCommand = function(user, command, args)
+	this.onCommand = function(message, command, args)
 	{
-		console.log(arguments);
-		this.modules.run('onCommand_' + command, user, args);
+		this.modules.run('onCommand_' + command, message.nick, args, message);
 	}
 	
 	this.onUserJoin = function(user)
